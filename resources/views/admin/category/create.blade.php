@@ -107,6 +107,22 @@
             return false;
         });
     });
+
+    $('#name').change(function(){
+    var element = $(this); // Capture the jQuery object
+    $.ajax({
+        url: '{{ route("getSlug") }}',
+        type: 'get',
+        data: { title: element.val() }, // Send the value of #name as 'title' parameter
+        dataType: 'json',
+        success: function(response){
+            if (response.status == true) { // Check if status is true
+                $("#slug").val(response.slug); // Set the value of #slug input field
+            }
+        }
+    });
+});
+
 </script>
 @endsection
 
