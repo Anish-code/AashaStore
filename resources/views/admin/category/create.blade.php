@@ -9,7 +9,7 @@
                 <h1>Create Category</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="categories.html" class="btn btn-primary">Back</a>
+                <a href="{{route('categories.index')}}" class="btn btn-primary">Back</a>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
         </div>
         <div class="pb-5 pt-3">
             <button type="submit" class="btn btn-primary">Create</button>
-            <a href="#" class="btn btn-outline-dark ml-3">Cancel</a>
+            <a href="{{route('categories.index')}}" class="btn btn-outline-dark ml-3">Cancel</a>
         </div>
         </form>
 
@@ -70,6 +70,8 @@
         $("#categoryform").submit(function(event){
             event.preventDefault();
             var element = $(this);
+            $("button[type=submit]").prop('disabled', true);
+
 
             $.ajax({
                 url:'{{ route("categories.store") }}',
@@ -77,7 +79,11 @@
                 data: element.serializeArray(),
                 dataType:'json',
                 success: function(response){
+            $("button[type=submit]").prop('disabled', false);
+
                     if(response['status']==true){
+
+                        window.location.href="{{route('categories.index')}}";
                         $("#name").removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
                         $("#slug").removeClass('is-invalid').siblings('p').removeClass('invalid-feedback').html("");
 
@@ -109,13 +115,17 @@
     });
 
     $('#name').change(function(){
-    var element = $(this); // Capture the jQuery object
+    var element = $(this); 
+    $("button[type=submit]").prop('disabled', true);
+
     $.ajax({
         url: '{{ route("getSlug") }}',
         type: 'get',
         data: { title: element.val() }, // Send the value of #name as 'title' parameter
         dataType: 'json',
         success: function(response){
+            $("button[type=submit]").prop('disabled', false);
+
             if (response.status == true) { // Check if status is true
                 $("#slug").val(response.slug); // Set the value of #slug input field
             }
